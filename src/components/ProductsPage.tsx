@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ProductService } from "../services/ProductService";
 import type { Product } from "../models/responses/Product";
 import "../styles/ProductsPage.css";
@@ -12,6 +12,11 @@ export function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
+
+  const notify = useCallback((msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,16 +39,10 @@ export function ProductsPage() {
     fetchProducts();
   }, []);
 
-  useEffect(() => {
-    if (!notification) return;
-    const timer = setTimeout(() => setNotification(null), 3000);
-    return () => clearTimeout(timer);
-  }, [notification]);
-
   const handleAddToCart = (product: Product) => {
     const cart: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
     const existingIndex = cart.findIndex(
-      (item) => item.resourceid === product.resourceid
+      (item) => item.resourceId === product.resourceId
     );
 
     if (existingIndex >= 0) {
@@ -56,13 +55,16 @@ export function ProductsPage() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    setNotification(`${product.name} agregado al carrito`);
+    notify(`${product.name} agregado al carrito`);
   };
 
   if (loading) {
     return (
       <div className="products-page">
-        <div className="loading">Cargando productos...</div>
+        <div style={{ textAlign: "center", padding: 80, color: "var(--gray-400)" }}>
+          <div className="spinner" />
+          <p style={{ marginTop: 16 }}>Cargando productos…</p>
+        </div>
       </div>
     );
   }
@@ -70,50 +72,51 @@ export function ProductsPage() {
   if (error) {
     return (
       <div className="products-page">
-        <div className="error">Error: {error}</div>
+        <div className="card" style={{ padding: 32, textAlign: "center", color: "var(--danger)", background: "var(--danger-bg)", borderColor: "var(--danger)" }}>
+          Error: {error}
+        </div>
       </div>
     );
   }
 
   return (
     <div className="products-page">
-      {notification && (
-        <div className="notification">{notification}</div>
-      )}
+      {notification && <div className="notification">{notification}</div>}
 
       <header className="products-header">
         <h1>Nuestros Productos</h1>
-        <p>Selecciona los productos que deseas comprar</p>
+        <p>{products.length} producto{products.length !== 1 ? "s" : ""} disponibles</p>
       </header>
 
       {products.length === 0 ? (
-        <div className="no-products">
-          <p>No hay productos disponibles en este momento</p>
+        <div className="card" style={{ padding: 60, textAlign: "center" }}>
+          <p style={{ color: "var(--gray-400)" }}>No hay productos disponibles en este momento</p>
         </div>
       ) : (
         <div className="products-grid">
           {products.map((product) => (
-            <div key={product.resourceid} className="product-card">
+            <div key={product.resourceId} className="product-card card">
               <div className="product-image">
-                <img
-                  src={product.image || "/placeholder.png"}
-                  alt={product.name}
-                />
+                {product.image ? (
+                  <img src={product.image} alt={product.name} />
+                ) : (
+                  <div className="product-image-placeholder">
+                    {product.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
               <div className="product-info">
                 <h3>{product.name}</h3>
-                <p className="product-description">
-                  {product.description}
-                </p>
+                <p className="product-description">{product.description}</p>
                 <div className="product-footer">
                   <span className="product-price">
                     ${product.price.toFixed(2)}
                   </span>
                   <button
-                    className="btn btn-add-cart"
+                    className="btn btn-primary btn-sm"
                     onClick={() => handleAddToCart(product)}
                   >
-                    Agregar al Carrito
+                    + Agregar
                   </button>
                 </div>
               </div>

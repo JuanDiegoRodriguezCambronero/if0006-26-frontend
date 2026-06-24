@@ -1,7 +1,8 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import { HomePage } from "./components/HomePage";
 import { ProductsPage } from "./components/ProductsPage";
 import { ShoppingCart } from "./components/ShoppingCart";
+import { AdminProducts } from "./components/AdminProducts";
 import "./App.css";
 
 function App() {
@@ -10,37 +11,45 @@ function App() {
       <div className="app">
         <nav className="navbar">
           <div className="nav-container">
-            <Link to="/" className="nav-logo">
-              🛍️ Mi Tienda
-            </Link>
+            <NavLink to="/" className="nav-logo">
+              Shop<span>Hub</span>
+            </NavLink>
             <ul className="nav-menu">
-              <li className="nav-item">
-                <Link to="/" className="nav-link">
+              <li>
+                <NavLink to="/" end className="nav-link">
                   Inicio
-                </Link>
+                </NavLink>
               </li>
-              <li className="nav-item">
-                <Link to="/productos" className="nav-link">
+              <li>
+                <NavLink to="/productos" className="nav-link">
                   Productos
-                </Link>
+                </NavLink>
               </li>
-              <li className="nav-item">
-                <Link to="/carrito" className="nav-link cart-link">
-                  🛒 Carrito
-                </Link>
+              <li>
+                <NavLink to="/carrito" className="nav-link">
+                  Carrito
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/admin" className="nav-link">
+                  Admin
+                </NavLink>
               </li>
             </ul>
           </div>
         </nav>
 
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/productos" element={<ProductsPage />} />
-          <Route path="/carrito" element={<ShoppingCart />} />
-        </Routes>
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/productos" element={<ProductsPage />} />
+            <Route path="/carrito" element={<ShoppingCart />} />
+            <Route path="/admin" element={<AdminProducts />} />
+          </Routes>
+        </div>
 
         <footer className="footer">
-          <p>&copy; 2024 Mi Tienda. Todos los derechos reservados.</p>
+          <p>&copy; 2026 ShopHub. Todos los derechos reservados.</p>
         </footer>
       </div>
     </Router>

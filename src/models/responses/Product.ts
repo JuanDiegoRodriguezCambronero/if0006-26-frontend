@@ -1,5 +1,5 @@
-export  interface Product {
-    resourceid: number;
+export interface Product {
+    resourceId: string;
     name: string;
     description: string;
     price: number;

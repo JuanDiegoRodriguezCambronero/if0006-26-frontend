@@ -5,8 +5,14 @@
 }
 
 .navbar {
-  background: var(--text-h);
-  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0 24px;
 }
 
 .nav-container {
@@ -15,33 +21,56 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
+  height: 64px;
 }
 
 .nav-logo {
-  color: var(--bg);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary);
   text-decoration: none;
-  font-size: 24px;
-  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.nav-logo span {
+  color: var(--accent);
 }
 
 .nav-menu {
   list-style: none;
   display: flex;
-  gap: 24px;
+  align-items: center;
+  gap: 4px;
   margin: 0;
   padding: 0;
 }
 
 .nav-link {
-  color: var(--bg);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--gray-600);
   text-decoration: none;
-  font-size: 16px;
-  opacity: 0.85;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .nav-link:hover {
-  opacity: 1;
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.nav-link.active {
+  color: var(--primary);
+  background: var(--primary-bg);
+}
+
+.main-content {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 24px;
 }
 
 .footer {
@@ -49,5 +78,34 @@
   padding: 24px;
   text-align: center;
   border-top: 1px solid var(--border);
-  color: var(--text);
+  color: var(--gray-400);
+  font-size: 13px;
+  background: var(--card-bg);
+}
+
+.notification {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  background: var(--gray-900);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  animation: notifIn 0.25s ease;
+}
+
+@keyframes notifIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 0 16px; }
+  .nav-container { height: 56px; }
+  .nav-link { padding: 6px 12px; font-size: 13px; }
+  .main-content { padding: 20px 16px; }
 }
