@@ -10,7 +10,8 @@ export const ProductService = {
             const response = await fetch(API_URL);
 
             if (!response.ok) {
-                throw new Error(`Error al obtener productos: ${response.statusText}`);
+                const text = await response.text().catch(() => "");
+                throw new Error(`Error al obtener productos (${response.status}): ${text || response.statusText}`);
             }
             return await response.json();   
         } catch (error) {

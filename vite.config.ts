@@ -8,6 +8,7 @@ export default defineConfig({
       '/api': {
         target: 'https://if0006-26-backend.onrender.com',
         changeOrigin: true,
+        secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
