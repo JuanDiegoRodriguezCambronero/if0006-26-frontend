@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "../models/responses/Product";
-import { getProducts } from "../services/ProductService";
+
+// CORRECCIÓN: Importamos el servicio unificado correctamente
+import { ProductService } from "../services/ProductService";
 
 type CartItem = Product & { quantity: number };
 
@@ -19,12 +21,13 @@ export function CarProducts() {
 
   useEffect(() => {
     setLoading(true);
-    getProducts()
-      .then((data) => {
+    // CORRECCIÓN: Llamada mediante el objeto unificado
+    ProductService.getProducts()
+      .then((data: Product[]) => {
         setProducts(data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error("Error al cargar productos:", err);
         setError("No se pudieron cargar los productos. Intenta de nuevo más tarde.");
         setLoading(false);
@@ -59,7 +62,8 @@ export function CarProducts() {
     setSavedItems((current) => current.filter((item) => item.resourceid !== product.resourceid));
   };
 
-  const updateQuantity = (resourceid: number, nextQuantity: number) => {
+  // CORRECCIÓN: Tipado de resourceid ajustado a string | number
+  const updateQuantity = (resourceid: string | number, nextQuantity: number) => {
     if (nextQuantity <= 0) {
       removeFromCart(resourceid);
       return;
@@ -71,11 +75,13 @@ export function CarProducts() {
     );
   };
 
-  const removeFromCart = (resourceid: number) => {
+  // CORRECCIÓN: Tipado de resourceid ajustado a string | number
+  const removeFromCart = (resourceid: string | number) => {
     setCartItems((current) => current.filter((item) => item.resourceid !== resourceid));
   };
 
-  const saveForLater = (resourceid: number) => {
+  // CORRECCIÓN: Tipado de resourceid ajustado a string | number
+  const saveForLater = (resourceid: string | number) => {
     const item = cartItems.find((entry) => entry.resourceid === resourceid);
     if (!item) return;
 
@@ -88,7 +94,8 @@ export function CarProducts() {
     });
   };
 
-  const moveToCart = (resourceid: number) => {
+  // CORRECCIÓN: Tipado de resourceid ajustado a string | number
+  const moveToCart = (resourceid: string | number) => {
     const item = savedItems.find((entry) => entry.resourceid === resourceid);
     if (!item) return;
     addToCart(item);
@@ -127,7 +134,13 @@ export function CarProducts() {
               <div className="amazon-cart__cart-list">
                 {cartItems.map((item) => (
                   <article className="amazon-cart__cart-item" key={item.resourceid}>
-                    <div className="amazon-cart__cart-item-image">{item.name.charAt(0).toUpperCase()}</div>
+                    <div className="amazon-cart__cart-item-image">
+                      {item.image ? (
+                        <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        item.name.charAt(0).toUpperCase()
+                      )}
+                    </div>
                     <div>
                       <div className="amazon-cart__cart-item-body">
                         <h3>{item.name}</h3>
@@ -213,7 +226,13 @@ export function CarProducts() {
               <div className="amazon-cart__product-list">
                 {products.map((product) => (
                   <article className="amazon-cart__product-card" key={product.resourceid}>
-                    <div className="amazon-cart__product-image">{product.name.charAt(0).toUpperCase()}</div>
+                    <div className="amazon-cart__product-image">
+                      {product.image ? (
+                        <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        product.name.charAt(0).toUpperCase()
+                      )}
+                    </div>
                     <div className="amazon-cart__product-details">
                       <h3>{product.name}</h3>
                       <p>{product.description}</p>
