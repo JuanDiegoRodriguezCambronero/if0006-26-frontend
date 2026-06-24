@@ -1,9 +1,10 @@
 import type { Product } from "../models/responses/Product";
 import { config } from "../config";
 
-const API_URL = `${config.api.url}/products`;
+const API_URL = import.meta.env.DEV
+  ? "/products"
+  : `${config.api.url}/products`;
 
-// Encapsulamos la función en un objeto para que coincida con tu componente
 export const ProductService = {
     async getProducts(): Promise<Product[]> {
         try {
