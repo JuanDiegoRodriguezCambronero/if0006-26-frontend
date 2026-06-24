@@ -1,3 +1,12 @@
+import { CarProducts } from "./components/CarProducts";
+//import { ProductList } from "./components/ProductList";
+
+function App() {
+  return <CarProducts />;
+}
+
+export default App;
+/*
 import { useRef } from "react";
 import "./App.css";
 
@@ -28,20 +37,6 @@ function App() {
 }
 
 export default App;
-
-
-
-
-/*
-import { CarProducts } from "./components/CarProducts";
-//import { ProductList } from "./components/ProductList";
-
-function App() {
-  return <CarProducts />;
-}
-
-export default App;
-
 
 --------------------------------------------------------------------------
 import { useState } from 'react'
