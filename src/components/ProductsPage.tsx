@@ -3,10 +3,15 @@ import { ProductService } from "../services/ProductService";
 import type { Product } from "../models/responses/Product";
 import "../styles/ProductsPage.css";
 
+interface CartItem extends Product {
+  quantity: number;
+}
+
 export function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [notification, setNotification] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -29,21 +34,29 @@ export function ProductsPage() {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (!notification) return;
+    const timer = setTimeout(() => setNotification(null), 3000);
+    return () => clearTimeout(timer);
+  }, [notification]);
+
   const handleAddToCart = (product: Product) => {
-    // Lógica para agregar al carrito
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const existingItem = cart.find(
-      (item: Product) => item.resourceid === product.resourceid
+    const cart: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+    const existingIndex = cart.findIndex(
+      (item) => item.resourceid === product.resourceid
     );
 
-    if (existingItem) {
-      existingItem.quantity = (existingItem.quantity || 1) + 1;
+    if (existingIndex >= 0) {
+      cart[existingIndex] = {
+        ...cart[existingIndex],
+        quantity: cart[existingIndex].quantity + 1,
+      };
     } else {
       cart.push({ ...product, quantity: 1 });
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert(`${product.name} agregado al carrito`);
+    setNotification(`${product.name} agregado al carrito`);
   };
 
   if (loading) {
@@ -64,6 +77,10 @@ export function ProductsPage() {
 
   return (
     <div className="products-page">
+      {notification && (
+        <div className="notification">{notification}</div>
+      )}
+
       <header className="products-header">
         <h1>Nuestros Productos</h1>
         <p>Selecciona los productos que deseas comprar</p>
