@@ -39,7 +39,7 @@ export function ShoppingCart() {
     }
 
     const updatedCart = cartItems.map((item) =>
-      item.id === productId ? { ...item, quantity: newQuantity } : item
+      item.resourceid === productId ? { ...item, quantity: newQuantity } : item
     );
 
     setCartItems(updatedCart);
@@ -47,7 +47,7 @@ export function ShoppingCart() {
   };
 
   const removeItem = (productId: string | number) => {
-    const updatedCart = cartItems.filter((item) => item.id !== productId);
+    const updatedCart = cartItems.filter((item) => item.resourceid !== productId);
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
@@ -88,7 +88,7 @@ export function ShoppingCart() {
         <div className="cart-container">
           <div className="cart-items">
             {cartItems.map((item) => (
-              <div key={item.id} className="cart-item">
+              <div key={item.resourceid} className="cart-item">
                 <div className="item-image">
                   <img
                     src={item.image || "/placeholder.png"}
@@ -102,7 +102,7 @@ export function ShoppingCart() {
                 <div className="item-quantity">
                   <button
                     onClick={() =>
-                      updateQuantity(item.id, (item.quantity || 1) - 1)
+                      updateQuantity(item.resourceid, (item.quantity || 1) - 1)
                     }
                   >
                     -
@@ -112,12 +112,12 @@ export function ShoppingCart() {
                     min="1"
                     value={item.quantity || 1}
                     onChange={(e) =>
-                      updateQuantity(item.id, parseInt(e.target.value) || 1)
+                      updateQuantity(item.resourceid, parseInt(e.target.value) || 1)
                     }
                   />
                   <button
                     onClick={() =>
-                      updateQuantity(item.id, (item.quantity || 1) + 1)
+                      updateQuantity(item.resourceid, (item.quantity || 1) + 1)
                     }
                   >
                     +
@@ -127,7 +127,7 @@ export function ShoppingCart() {
                   <span>${(item.price * (item.quantity || 1)).toFixed(2)}</span>
                   <button
                     className="btn-remove"
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeItem(item.resourceid)}
                   >
                     ✕
                   </button>

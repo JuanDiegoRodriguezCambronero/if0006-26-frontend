@@ -33,7 +33,7 @@ export function ProductsPage() {
     // Lógica para agregar al carrito
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const existingItem = cart.find(
-      (item: Product) => item.id === product.id
+      (item: Product) => item.resourceid === product.resourceid
     );
 
     if (existingItem) {
@@ -76,7 +76,7 @@ export function ProductsPage() {
       ) : (
         <div className="products-grid">
           {products.map((product) => (
-            <div key={product.id} className="product-card">
+            <div key={product.resourceid} className="product-card">
               <div className="product-image">
                 <img
                   src={product.image || "/placeholder.png"}
