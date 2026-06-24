@@ -33,6 +33,7 @@ export function ProductList() {
                 <div key={product.resourceid}>
                     <h2>{product.name}</h2>
                     <p>${product.price}</p>
+                    <p>${product.description}</p>
                 </div>
             ))}
         </div>
